@@ -8,13 +8,15 @@ const CommentDiv = styled(HDiv)`
   border-bottom: 1px solid var(--grey);
 `;
 
-export default function Comment() {
+export default function Comment({ comment }) {
+  const { id, content, created_at: postDate, num_likes: votes, user, 'voted?': userHasVoted } = comment;
+
   return (
     <CommentDiv>
-      <Votes />
+      <Votes votes={votes} userHasVoted={userHasVoted} parent={{type: 'comment', id}}/>
       <div>
-        <h5>USERNAME - DD/MM/YYYY</h5>
-        <p>Comment Body. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <h5>{user.username} - {postDate.substring(0, 10)}</h5>
+        <p>{content}</p>
       </div>
     </CommentDiv>
   );

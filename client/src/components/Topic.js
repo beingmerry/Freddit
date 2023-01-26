@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 
 import PostList from './PostList';
 import { Button } from '../styled-components/Button';
@@ -15,17 +16,29 @@ const PostButton = styled(Button)`
 
 export default function Topic() {
   const { topic_name: topicName } = useParams();
-  const a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const [posts, setPosts] = useState([]);
+  const user = useSelector(state => state.user);
+
+  useEffect(() => {
+    fetch(`/posts?topic_name=${topicName}`)
+      .then(r => {
+        if (r.ok) {
+          r.json().then(setPosts);
+        } else {
+          r.json().then(console.log);
+        }
+      })
+  }, [topicName, user]);
 
   return (
     <main>
-      <TopicTitle>TOPIC NAME : {topicName} </TopicTitle>
-      <p>This is an example of a topic description, instead of it being typed out like this I would hope it would be dynamically generated.</p>
+      <TopicTitle>{topicName}</TopicTitle>
+      {/* <p>This is an example of a topic description, instead of it being typed out like this I would hope it would be dynamically generated.</p> */}
       <Link to="new-post">
         <PostButton>Post to {topicName}</PostButton>
       </Link>
       <hr />
-      <PostList posts={a} />
+      <PostList posts={posts} />
     </main>
   );
 }

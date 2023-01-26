@@ -1,5 +1,5 @@
 class Topic < ApplicationRecord
-  validates :name, presence: :true
+  validates :name, presence: true
   has_many :posts
 
   def post_titles

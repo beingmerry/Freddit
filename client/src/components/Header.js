@@ -1,16 +1,27 @@
-import React from 'react'
-import styled from 'styled-components'
-import { Button } from '../styled-components/Button'
-import { Link } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { showLoginModal } from '../features/loginModal/loginModalSlice'
+import React from 'react';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import logo from '../assets/fr-logo.png';
+
+import SignupButton from './SignupButton';
+
+const TitleContainer = styled(Link)`
+  display: flex;
+  align-items: end;
+`;
 
 const Icon = styled.img`
   display: block;
   width: 100%;
   max-width: 5rem;
-  margin: 0 1em;
-`
+  margin: 0.5em 1em;
+`;
+
+// const Title = styled.h1`
+//   color: black;
+//   text-decoration: none;
+// `;
 
 const Head = styled.header`
   display: flex;
@@ -22,24 +33,31 @@ const Head = styled.header`
 
 const SignupDiv = styled.div`
   padding: 0 1em;
-`
+`;
 
 export default function Header () {
-  const dispatch = useDispatch()
-  // useEffect for setUser will pass into login modal
+  const user = useSelector(state => state.user) // user stores user state data
+
   return (
     <Head>
-      <Link to='/'>
+      <TitleContainer to='/'>
         <Icon
-          src='https://play-lh.googleusercontent.com/nlptFyxNsb8J0g8ZLux6016kunduV4jCxIrOJ7EEy-IobSN1RCDXAJ6DTGP81z7rr5Zq'
+          src={logo}
           alt='icon'
         />
-      </Link>
-      <SignupDiv>
-        {/* Signup */}
-        <p>Want to join all the swell chaps at Freddit? Sign up today!</p>
-        <Button onClick={() => dispatch(showLoginModal())}>Become a Fredditor</Button>
-      </SignupDiv>
+        {/* <Title>Freddit</Title> */}
+      </TitleContainer>
+
+
+      {user.id ? '' : (
+        <SignupDiv>
+          {/* Signup OR Signout */}
+          <p>
+            Want to join all the REAL front pagers at Freddit? Sign up today!
+          </p>
+          <SignupButton />
+        </SignupDiv>
+      )}
     </Head>
   )
 }

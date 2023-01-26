@@ -1,31 +1,54 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import React from 'react'
+import { Link } from 'react-router-dom'
+import styled from 'styled-components'
+import { UserNameLink } from '../styled-components/UserNameLink'
+import { Section, HDiv } from '../styled-components/Divs'
+import Votes from './Votes'
+import logo from '../assets/fr-logo.png';
 
-import { Section, HDiv } from '../styled-components/Divs';
-import Votes from './Votes';
 
 const Img = styled.img`
   min-width: 12rem;
   max-width: 80%;
-`;
+`
 
-export default function PostBody({ post }) {
-  const { topic } = post;
+export default function PostBody ({ post }) {
+  const {
+    id,
+    title,
+    content,
+    user,
+    topic,
+    num_likes: votes,
+    created_at: postDate,
+    'voted?': userHasVoted,
+    thumbnail_url: img
+  } = post
 
   return (
-    <Section as="article">
+    <Section as='article'>
       <HDiv>
-        <Votes />
+        <Votes votes={votes} userHasVoted={userHasVoted} parent={{type: 'post', id}}/>
         <div>
-          <h3>POST TITLE</h3>
-          <h4>Submitted to <Link to={`/fr/${topic}`}>{topic}</Link> by USERNAME on DD/MM/YYYY</h4>
-          <Img src="https://a.thumbs.redditmedia.com/bUKEZv1sh0YzDoFLv8WCZMuElZvAFWmX4d0a9kwtI68.jpg" alt="POST TITLE" />
-          <p>
-            Post body. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          </p>
+          <h3>{title}</h3>
+          <h4>
+            Submitted to <Link to={`/fr/${topic.name}`}>{topic.name}</Link> by{' '}
+            <UserNameLink to={`/users/${user.id}`}>
+              {user.username}
+            </UserNameLink>{' '}
+            on {postDate.substring(0, 10)}
+          </h4>
+          <Img
+            src={img}
+            alt={title}
+            onError={e => {
+              e.target.onerror = null;
+              e.target.src = logo;
+            }}  
+          />
+          <p>{content}</p>
         </div>
       </HDiv>
     </Section>
-  );
+  )
 }

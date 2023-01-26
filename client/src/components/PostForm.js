@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import { FormInput } from '../styled-components/FormInput';
 import { PostButton } from '../styled-components/Button';
@@ -24,16 +25,17 @@ const DEFAULT_FORM_DATA = {
   topic: '',
   title: '',
   img: '',
-  text: '',
+  content: '',
 }
 
 export default function PostForm() {
   const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
 
+  const user = useSelector(state => state.user);
   const params = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(params);
     setFormData(f => ({...f, topic: params['topic_name'] || ''}));
   }, [params]);
 
@@ -47,8 +49,29 @@ export default function PostForm() {
 
   const handleSubmit = e => {
     e.preventDefault();
-    console.log(formData);
-    setFormData(DEFAULT_FORM_DATA);
+    fetch(`/users/${user.id}/posts`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        title: formData.title,
+        thumbnail_url: formData.img,
+        content: formData.content,
+        topic_name: formData.topic
+      })
+    })
+      .then(r => {
+        if (r.ok) {
+          r.json().then(data => {
+            navigate(`/fr/${data.topic.name}/${data.id}`);
+          });
+        } else {
+          r.json().then(data => {
+            console.log(data);
+          });
+        }
+      });
   }
 
   return (
@@ -89,10 +112,10 @@ export default function PostForm() {
       <label htmlFor='textarea'>Post Body</label>
       <AutosizeTextarea
         id="textarea"
-        name="text"
+        name="content"
         minRows={5}
         maxRows={15}
-        value={formData.text}
+        value={formData.content}
         onChange={handleChange}
       />
       <PostButton as="input" type="submit" value="Publish" />

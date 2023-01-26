@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -8,11 +8,21 @@ const Nav = styled.nav`
 `;
 
 export default function NavBar() {
-  const items = ['flatiron', 'coding', 'duck_pictures', 'reddit_h8rs'];
-  
+  const [topics, setTopics] = useState([]);
+
+  useEffect(() => {
+    fetch('/topics')
+      .then(r => {
+        if (r.ok) {
+          r.json().then(data => setTopics(data.map(t => t.name)));
+        } else {
+          r.json().then(console.log);
+        }
+      })
+  }, []);
   return (
     <Nav>
-      {items.map((n, i) =>
+      {topics.map((n, i) =>
         <span key={i}>
           {i > 0 ? <span> | </span> : ''}
           <NavLink to={`/fr/${n}`}>{n}</NavLink>

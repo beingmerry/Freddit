@@ -3,9 +3,12 @@ import styled from 'styled-components';
 
 import { MyLink } from '../styled-components/MyLink';
 import Votes from './Votes';
+import logo from '../assets/fr-logo.png';
 
 const PostContainer = styled.div`
   display: flex;
+  flex-direction: row-reverse;
+  justify-content: left;
   align-items: start;
   gap: 0.5em;
 `;
@@ -33,21 +36,29 @@ const PostDetails = styled.p`
   padding-left: 0.5em;
 `;
 
-export default function PostCard({ position }) {
+export default function PostCard({ position, post }) {
+  const { id, title, thumbnail_url: img, created_at: postDate, user, topic, num_likes: votes, 'voted?': userHasVoted } = post;
 
   return (
     <PostContainer>
-      <Ranking>{position}</Ranking>
-      <Votes />
-      <MyLink to='/fr/topic/1'>
-        <PostThumbnail src="https://a.thumbs.redditmedia.com/bUKEZv1sh0YzDoFLv8WCZMuElZvAFWmX4d0a9kwtI68.jpg" alt="thumbnail" />
+      <MyLink to={`/fr/${topic?.name || 'topic'}/${id}`}>
+        <PostThumbnail
+          src={img}
+          alt="thumbnail"
+          onError={e => {
+            e.target.onerror = null;
+            e.target.src = logo;
+          }}
+        />
         <section>
-          <PostTitle>POST TITLE: Lorem Ipsum or something</PostTitle>
+          <PostTitle>{title}</PostTitle>
           <PostDetails>
-            submitted/updated on DATE by USER to TOPIC 
+            submitted on {postDate.substring(0, 10)} by {user.username} to {topic?.name || 'UNKNOWN'}
           </PostDetails>
         </section>
       </MyLink>
+      <Votes votes={votes} userHasVoted={userHasVoted} parent={{type: 'post', id}}/>
+      <Ranking>{position}</Ranking>
     </PostContainer>
   );
 }

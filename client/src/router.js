@@ -5,6 +5,7 @@ import Home from './components/Home';
 import Post from './components/Post';
 import Topic from './components/Topic';
 import NewPost from './components/NewPost';
+import Profile from './components/Profile';
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
       {
         path: 'new-post',
         element: <NewPost />,
+      },
+      {
+        path: 'users/:id',
+        element: <Profile />,
       },
       {
         path: 'fr/:topic_name',

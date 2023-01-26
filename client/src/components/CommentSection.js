@@ -11,20 +11,20 @@ const CommentList = styled.ul`
   list-style: none;
 `;
 
-export default function CommentSection() {
+export default function CommentSection({ postId, comments, onComment }) {
   const user = useSelector(state => state.user);
 
-  const comments = [1, 2, 3, 4, 5].map(n =>
-    <Comment key={n} />
+  const commentElements = comments.map((c, idx) =>
+    <Comment key={`comment-${idx}`} comment={c}/>
   );
 
   return (
     <Section>
       <h4>Want to add to the discussion?</h4>
-      {user.username ? <CreateComment /> : <SignupButton />}
+      {user.username ? <CreateComment postId={postId} onComment={onComment} /> : <SignupButton />}
       <h4>Comments</h4>
       <CommentList>
-        {comments}
+        {commentElements}
       </CommentList>
     </Section>
   );

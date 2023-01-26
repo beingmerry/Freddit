@@ -10,15 +10,20 @@ const PostOrderedList = styled.ol`
 `;
 
 export default function PostList({ posts }) {
-  const postElements = posts.map((_, index) =>
+  const postElements = posts.map((p, index) =>
     <PostLi key={index}>
-      <PostCard position={index + 1} />
+      <PostCard position={index + 1} post={p} />
     </PostLi>
   );
 
   return (
-    <PostOrderedList>
-      {postElements}
-    </PostOrderedList>
+    <>
+      {postElements.length > 0
+        ? (<PostOrderedList>
+            {postElements}
+          </PostOrderedList>)
+        : <h1>Could not fetch any posts.</h1>
+      }
+    </>
   );
 }

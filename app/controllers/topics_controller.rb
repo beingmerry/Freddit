@@ -1,4 +1,5 @@
 class TopicsController < ApplicationController
+  wrap_parameters false
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
   def index
     topics = Topic.all
@@ -13,6 +14,6 @@ class TopicsController < ApplicationController
   private
 
   def not_found
-    render json: { error: 'Topic not found' }, status: :not_found
+    render json: {errors: ['Topic not found'] }, status: :not_found
   end
 end
