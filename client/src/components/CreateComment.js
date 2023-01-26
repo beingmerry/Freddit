@@ -14,7 +14,7 @@ export default function CreateComment({ postId, onComment }) {
 
   const handleSubmit = e => {
     e.preventDefault();
-    fetch(`/users/${user.id}/comments`, {
+    fetch(`/api/users/${user.id}/comments`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

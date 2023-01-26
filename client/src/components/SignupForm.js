@@ -34,7 +34,7 @@ export default function LoginForm () {
 
   function handleNewUser (e) {
     e.preventDefault()
-    fetch('/users', {
+    fetch('/api/users', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

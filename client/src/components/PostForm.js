@@ -49,7 +49,7 @@ export default function PostForm() {
 
   const handleSubmit = e => {
     e.preventDefault();
-    fetch(`/users/${user.id}/posts`, {
+    fetch(`/api/users/${user.id}/posts`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

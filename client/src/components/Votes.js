@@ -46,7 +46,7 @@ export default function Votes({ votes, userHasVoted, parent }) {
       return dispatch(showLoginModal());
     }
 
-    fetch(`/users/${user.id}/likes`, {
+    fetch(`/api/users/${user.id}/likes`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

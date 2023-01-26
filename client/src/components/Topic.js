@@ -20,7 +20,7 @@ export default function Topic() {
   const user = useSelector(state => state.user);
 
   useEffect(() => {
-    fetch(`/posts?topic_name=${topicName}`)
+    fetch(`/api/posts?topic_name=${topicName}`)
       .then(r => {
         if (r.ok) {
           r.json().then(setPosts);

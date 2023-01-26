@@ -10,7 +10,7 @@ export default function Profile () {
   const user = useSelector(state => state.user)
   const { id } = useParams()
   useEffect(() => {
-    fetch(`/users/${id}/posts`).then(res => {
+    fetch(`/api/users/${id}/posts`).then(res => {
       if (res.ok) {
         res.json().then(data => {
           setUserName(data[0].user.username)

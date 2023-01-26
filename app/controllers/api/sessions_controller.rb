@@ -1,4 +1,4 @@
-class SessionsController < ApplicationController
+class Api::SessionsController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, with: :unauthorized
   def show
     user = User.find(session[:user_id])

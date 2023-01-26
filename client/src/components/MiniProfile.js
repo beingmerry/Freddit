@@ -13,7 +13,7 @@ export default function MiniProfile () {
   const dispatch = useDispatch()
   const user = useSelector(state => state.user)
   function handleLogout () {
-    fetch('/logout', {
+    fetch('/api/logout', {
       method: 'DELETE'
     }).then(() => dispatch(logout()))
   }

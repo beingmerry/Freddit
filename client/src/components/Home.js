@@ -9,7 +9,7 @@ export default function Home() {
   const user = useSelector(state => state.user);
 
   useEffect(() => {
-    fetch('/posts')
+    fetch('/api/posts')
       .then(r => {
         if (r.ok) {
           r.json().then( data => { setPosts(data) } );

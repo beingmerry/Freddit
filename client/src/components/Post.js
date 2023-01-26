@@ -10,7 +10,7 @@ export default function Post() {
   const [post, setPost] = useState({});
 
   useEffect(() => {
-    fetch(`/posts/${postId}`)
+    fetch(`/api/posts/${postId}`)
       .then(r => {
         if (r.ok) {
           r.json().then(setPost);

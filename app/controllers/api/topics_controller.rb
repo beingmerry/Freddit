@@ -1,4 +1,4 @@
-class TopicsController < ApplicationController
+class Api::TopicsController < ApplicationController
   wrap_parameters false
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
   def index

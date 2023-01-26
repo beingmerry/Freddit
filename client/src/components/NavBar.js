@@ -11,7 +11,7 @@ export default function NavBar() {
   const [topics, setTopics] = useState([]);
 
   useEffect(() => {
-    fetch('/topics')
+    fetch('/api/topics')
       .then(r => {
         if (r.ok) {
           r.json().then(data => setTopics(data.map(t => t.name)));
