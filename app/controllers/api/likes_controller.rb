@@ -29,7 +29,10 @@ class Api::LikesController < ApplicationController
     user = User.find(params[:user_id])
     return unauthorized unless user.id == session[:user_id]
 
-    like = Like.find(params[:id])
+    likeable = Comment.find(params[:comment_id]) if params[:comment_id]
+    likeable = Post.find(params[:post_id]) if params[:post_id]
+    
+    like = Like.find_by(likeable_id: likeable.id, likeable_type: likeable.class.to_s)
     like.destroy
 
     head :no_content

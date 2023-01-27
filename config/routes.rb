@@ -4,7 +4,8 @@ Rails.application.routes.draw do
     resources :users do
       resources :posts, only: [:index, :create, :destroy, :update]
       resources :comments, only: [:index, :create]
-      resources :likes, only: [:index, :create, :destroy]
+      resources :likes, only: [:index, :create]
+      delete '/likes', to: 'likes#destroy'
     end
     resources :posts, only: [:index, :show]
     resources :posts do
