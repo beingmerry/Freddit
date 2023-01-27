@@ -1,16 +1,17 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux';
 import styled from 'styled-components'
 import { UserNameLink } from '../styled-components/UserNameLink'
 import { Section, HDiv } from '../styled-components/Divs'
+import { Button } from '../styled-components/Button';
 import Votes from './Votes'
 import logo from '../assets/fr-logo.png';
-
 
 const Img = styled.img`
   min-width: 12rem;
   max-width: 80%;
-`
+`;
 
 export default function PostBody ({ post }) {
   const {
@@ -24,6 +25,7 @@ export default function PostBody ({ post }) {
     'voted?': userHasVoted,
     thumbnail_url: img
   } = post
+  const currentUser = useSelector(state => state.user);
 
   return (
     <Section as='article'>
@@ -49,6 +51,14 @@ export default function PostBody ({ post }) {
           <p>{content}</p>
         </div>
       </HDiv>
+      {user.id === currentUser.id
+        ? (
+          <Link to={`/edit-post/${id}`}>
+            <Button>Edit this post</Button>
+          </Link>
+        )
+        : null
+      }
     </Section>
   )
 }

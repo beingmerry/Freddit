@@ -42,7 +42,10 @@ class Api::PostsController < ApplicationController
   end
 
   def destroy
-    Post.find(params[:id]).destroy if user&.id == session[:user_id]
+    if @user&.id == session[:user_id]
+      Post.find(params[:id]).destroy
+      return head :no_content
+    end
 
     unauthorized
   end

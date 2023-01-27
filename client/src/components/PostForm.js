@@ -28,16 +28,18 @@ const DEFAULT_FORM_DATA = {
   content: '',
 }
 
-export default function PostForm() {
-  const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
+export default function PostForm({ startData, editForm, postId }) {
+  const [formData, setFormData] = useState(startData || DEFAULT_FORM_DATA);
 
   const user = useSelector(state => state.user);
   const params = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    setFormData(f => ({...f, topic: params['topic_name'] || ''}));
-  }, [params]);
+    if (!editForm) {
+      setFormData(f => ({...f, topic: params['topic_name'] || ''}));
+    }
+  }, [params, editForm]);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -47,8 +49,7 @@ export default function PostForm() {
     });
   }
 
-  const handleSubmit = e => {
-    e.preventDefault();
+  const createPost = () => {
     fetch(`/api/users/${user.id}/posts`, {
       method: 'POST',
       headers: {
@@ -74,18 +75,68 @@ export default function PostForm() {
       });
   }
 
+  const updatePost = () => {
+    fetch(`/api/users/${user.id}/posts/${postId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        title: formData.title,
+        thumbnail_url: formData.img,
+        content: formData.content
+      })
+    })
+      .then(r => {
+        if (r.ok) {
+          r.json().then(data => {
+            navigate(`/fr/${data.topic.name}/${data.id}`);
+          });
+        } else {
+          r.json().then(data => {
+            console.log(data);
+          });
+        }
+      });
+  }
+
+  const deletePost = () => {
+    fetch(`/api/users/${user.id}/posts/${postId}`, {
+      method: 'DELETE'
+    })
+      .then(r => {
+        if (r.ok) {
+          navigate('/');
+        } else {
+          r.json().then(console.log);
+        }
+      })
+  }
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    if (editForm) {
+      updatePost();
+    } else {
+      createPost();
+    }
+  }
+
   return (
     <Form onSubmit={handleSubmit}>
       <label htmlFor='topic-name'>Topic Name</label>
-      <FormInput
-        type="text"
-        name="topic"
-        id="topic-name"
-        placeholder="i.e. duck_pictures"
-        value={formData.topic}
-        onChange={handleChange}
-        required
-      />
+      {editForm === undefined
+        ? (<FormInput
+          type="text"
+          name="topic"
+          id="topic-name"
+          placeholder="i.e. duck_pictures"
+          value={formData.topic}
+          onChange={handleChange}
+          required
+        />)
+        : <span><strong>{formData.topic}</strong></span>
+      }
       <label htmlFor='title'>Title</label>
       <FormInput
         type="text"
@@ -118,7 +169,8 @@ export default function PostForm() {
         value={formData.content}
         onChange={handleChange}
       />
-      <PostButton as="input" type="submit" value="Publish" />
+      <PostButton as="input" type="submit" value={editForm ? "Update" : "Publish"} />
+      {editForm ? <PostButton onClick={deletePost}>Delete this post</PostButton> : null}
     </Form>
   );
 }

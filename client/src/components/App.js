@@ -7,6 +7,7 @@ import '../App.css';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import SignupModal from './SignupModal';
+import Footer from './Footer';
 
 export default function App () {
   const dispatch = useDispatch();
@@ -26,6 +27,7 @@ export default function App () {
       <Header />
       <Sidebar />
       <Outlet />
+      <Footer />
     </>
   )
 }
