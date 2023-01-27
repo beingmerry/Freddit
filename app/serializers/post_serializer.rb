@@ -1,7 +1,7 @@
 class PostSerializer < ActiveModel::Serializer
   attributes :id, :thumbnail_url, :title, :num_likes, :voted?, :created_at
   belongs_to :topic, serializer: ReducedTopicSerializer
-  belongs_to :user
+  belongs_to :user, serializer: ExpandedUserSerializer
 
   def voted?
     user = User.find_by(id: instance_options[:session_user_id])

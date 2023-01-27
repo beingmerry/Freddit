@@ -28,7 +28,6 @@ export default function LoginForm () {
   const [errors, setErrors] = useState(null)
   const dispatch = useDispatch()
 
-
   function handleLoginUser (e) {
     e.preventDefault()
     fetch(`/api/login`, {
@@ -46,7 +45,9 @@ export default function LoginForm () {
           dispatch(login(data))
         })
       } else {
-        r.json().then(data => setErrors(data.errors))
+        r.json().then(data => {
+          setErrors(data.errors)
+        })
       }
     })
   }
@@ -67,7 +68,7 @@ export default function LoginForm () {
         onChange={e => setPassword(e.target.value)}
       />
       <FormInput type='submit' value='Login' />
-      <p>{errors ? `⚠️ ${errorMap(errors)}` : null}</p>
+      <p>{errors ? errorMap(errors) : null}</p>
     </LoginUserContainer>
   )
 }

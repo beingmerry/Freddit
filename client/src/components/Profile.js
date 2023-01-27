@@ -17,7 +17,6 @@ export default function Profile () {
           data[0].user.username === user.username
             ? setUserEmail(data[0].user.email)
             : setUserEmail('')
-          console.log(data)
           setPosts(data)
         })
       } else {
