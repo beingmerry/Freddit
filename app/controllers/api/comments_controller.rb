@@ -1,8 +1,9 @@
 class Api::CommentsController < ApplicationController
+  rescue_from ActiveRecord::RecordNotFound, with: :not_found
   wrap_parameters false
   before_action :too_many_arguments, only: [:index]
   before_action :get_user
-  before_action :get_post
+  before_action :get_post, only: [:index, :create]
   def index
     comments = @user.comments unless @user.nil?
     comments = @post.comments unless @post.nil?
@@ -20,6 +21,24 @@ class Api::CommentsController < ApplicationController
     comment.user = @user
     comment.save
     render json: comment, status: :created
+  end
+
+  def update
+    return unauthorized unless session[:user_id] == @user.id
+
+    comment = Comment.find(params[:id])
+    comment.update(comment_params)
+
+    render json: comment, status: :ok
+  end
+
+  def destroy
+    return unauthorized unless session[:user_id] == @user.id
+
+    comment = Comment.find(params[:id])
+    comment.destroy
+
+    head :no_content
   end
 
   private
@@ -42,12 +61,16 @@ class Api::CommentsController < ApplicationController
     render json: { errors: ['User not found'] }, status: :not_found
   end
 
+  def not_found
+    return json: { errors: ['Comment not found'] }, status: :not_found
+  end
+
   def too_many_arguments
     return render json: { errors: ['Too many arguments'] }, status: :unprocessable_entity if params[:user_id] && params[:post_id]
   end
 
   def comment_params
-    params.permit(:content)
+    params.permit(%i[id content post_id user_id])
   end
 
   def unauthorized

@@ -3,7 +3,7 @@ Rails.application.routes.draw do
     resources :users, only: [:index, :show, :create]
     resources :users do
       resources :posts, only: [:index, :create, :destroy, :update]
-      resources :comments, only: [:index, :create]
+      resources :comments, only: [:index, :create, :destroy, :update]
       resources :likes, only: [:index, :create]
       delete '/likes', to: 'likes#destroy'
     end
