@@ -22,4 +22,14 @@ class Like < ApplicationRecord
       save
     end
   end
+
+  def remove_vote
+    unless likeable.nil?
+      likeable.num_likes -= vote
+      likeable.save
+      user.save
+      self.vote = 0
+      save
+    end
+  end
 end

@@ -33,9 +33,10 @@ class Api::LikesController < ApplicationController
     likeable = Post.find(params[:post_id]) if params[:post_id]
     
     like = Like.find_by(likeable_id: likeable.id, likeable_type: likeable.class.to_s)
-    like.destroy
+    like.remove_vote
 
-    head :no_content
+    render json: like, session_user_id: session[:user_id], status: :ok
+    like.destroy
   end
 
   private
