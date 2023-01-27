@@ -46,6 +46,14 @@ export default function Votes({ votes, userHasVoted, parent }) {
       return dispatch(showLoginModal());
     }
 
+    if (voteData.userHasVoted === vote) {
+      voteDelete();
+    } else {
+      votePost(vote);
+    }
+  }
+
+  const votePost = (vote) => {
     fetch(`/api/users/${user.id}/likes`, {
       method: 'POST',
       headers: {
@@ -59,15 +67,40 @@ export default function Votes({ votes, userHasVoted, parent }) {
       .then(r => {
         if (r.ok) {
           r.json().then(likeData => {
-            setVoteData({
-              voteCount: likeData['post_or_comment']['num_likes'],
-              userHasVoted: likeData['post_or_comment']['voted?']
-            });
+            updateVoteData(likeData);
           });
         } else {
           r.json().then(console.log);
         }
       });
+  }
+
+  const voteDelete = () => {
+    fetch(`/api/users/${user.id}/likes`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        [`${parent.type}_id`]: parent.id,
+      }),
+    })
+      .then(r => {
+        if (r.ok) {
+          r.json().then(likeData => {
+            updateVoteData(likeData);
+          });
+        } else {
+          r.json().then(console.log);
+        }
+      })
+  }
+
+  const updateVoteData = data => {
+    setVoteData({
+      voteCount: data['post_or_comment']['num_likes'],
+      userHasVoted: data['post_or_comment']['voted?']
+    });
   }
 
   useEffect(() => {
@@ -79,13 +112,11 @@ export default function Votes({ votes, userHasVoted, parent }) {
       <VoteButton
         onClick={() => handleVote(1)}
         className={`up ${VOTE_CLASS[voteData.userHasVoted]}`}
-        disabled={voteData.userHasVoted === 1}
       >⇧</VoteButton>
       <div>{voteData.voteCount}</div>
       <VoteButton
         onClick={() => handleVote(-1)}
         className={`down ${VOTE_CLASS[voteData.userHasVoted]}`}
-        disabled={voteData.userHasVoted === -1}
       >⇩</VoteButton>
     </VotesContainer>
   );
